@@ -5,6 +5,10 @@ Model:: Model(QOpenGLWidget * _glWidget)
     glWidget = _glWidget;
     glWidget->makeCurrent();
     initializeOpenGLFunctions();
+    shaderOK = false;
+    vboOK = false;
+    loaded = false;
+
 }
 Model::~Model()
 {
@@ -42,6 +46,10 @@ void Model::createVBOs()
     glGenBuffers(1 , &vboIndices);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,numFaces * 3 * sizeof(unsigned int), indices.get() , GL_STATIC_DRAW);
+
+    vboOK = true;
+
+
 }
 
 void Model::createShaders()
@@ -150,10 +158,13 @@ void Model::createShaders()
     vs.close();
     fs.close();
 
+    shaderOK = true;
+
 }
 
 void Model::drawModel()
 {
+    loaded = false;
     modelMatrix.setToIdentity();
     modelMatrix.scale(invDiag, invDiag, invDiag);
     modelMatrix.translate(-midPoint);
@@ -167,6 +178,7 @@ void Model::drawModel()
     GLuint locModelMatrix = glGetUniformLocation(shaderProgram,"model");
     glUniformMatrix4fv(locModelMatrix, 1, GL_FALSE, modelMatrix.data());
     glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_INT, 0);
+    loaded = true;
 }
 
 void Model::readOFFFile (QString const & fileName)

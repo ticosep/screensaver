@@ -13,12 +13,19 @@ void OpenGLWidget::initializeGL()
     glEnable (GL_DEPTH_TEST);
     openFileOff();
 
+    time =  new QTime();
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(rotateNColor()));
+    timer->start(250);
+    time->start();
+
 }
 
 void OpenGLWidget::resizeGL( int w , int h )
 {
     glViewport(0 ,0 ,w , h);
 }
+
 void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -38,12 +45,13 @@ void OpenGLWidget::openFileOff()
     tempDir.cd("..");
     tempDir.cd("screensaver");
 
-    fileName =  tempDir.absoluteFilePath("Apple.off");
+    fileName =  tempDir.absoluteFilePath("pig.off");
 
     if (!fileName.isEmpty())
     {
 
         model = std::make_shared<Model>(this);
+        model->yTransform = 90;
         model->readOFFFile(fileName);
 
     }
@@ -52,4 +60,12 @@ void OpenGLWidget::openFileOff()
 
 }
 
+void OpenGLWidget::rotateNColor(){
+
+    qDebug() << time->msec();
+    model->zTransform = time->msec();
+    update();
+
+    time->restart();
+}
 
