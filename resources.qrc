@@ -3,7 +3,4 @@
         <file>fshader1.glsl</file>
         <file>vshader1.glsl</file>
     </qresource>
-    <qresource prefix="/off">
-        <file>Apple.off</file>
-    </qresource>
 </RCC>

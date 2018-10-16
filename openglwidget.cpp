@@ -62,7 +62,6 @@ void OpenGLWidget::openFileOff()
 
 void OpenGLWidget::rotateNColor(){
 
-    qDebug() << time->msec();
     model->zTransform = time->msec();
     update();
 
