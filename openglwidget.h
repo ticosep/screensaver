@@ -15,7 +15,11 @@ class OpenGLWidget : public QOpenGLWidget , protected QOpenGLExtraFunctions
 
 
     public:
-        std::shared_ptr<Model> model = nullptr;
+        std::shared_ptr<Model> pig1 = nullptr;
+        std::shared_ptr<Model> pig2 = nullptr;
+        std::shared_ptr<Model> pig3 = nullptr;
+
+        std::vector<std::shared_ptr<Model>> pigs;
 
         QTimer *timer;
         QTime *time;
@@ -29,7 +33,7 @@ class OpenGLWidget : public QOpenGLWidget , protected QOpenGLExtraFunctions
         void paintGL();
 
     public slots:
-            void rotateNColor();
+            void rotateNtranslate();
 
 };
 

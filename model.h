@@ -34,8 +34,12 @@ public:
     GLuint vboVertices = 0;
     GLuint vboIndices = 0;
     GLuint shaderProgram = 0;
+
     QMatrix4x4 modelMatrix;
     QVector3D midPoint;
+
+    QVector4D max;
+    QVector4D min;
 
     double invDiag;
 

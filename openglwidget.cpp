@@ -15,7 +15,7 @@ void OpenGLWidget::initializeGL()
 
     time =  new QTime();
     timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(rotateNColor()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(rotateNtranslate()));
     timer->start(250);
     time->start();
 
@@ -30,9 +30,11 @@ void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if(!model)
+    if(!pig1 || !pig2 || !pig3)
         return;
-    model->drawModel();
+    pig1->drawModel();
+    pig2->drawModel();
+    pig3->drawModel();
 
 
 }
@@ -50,9 +52,27 @@ void OpenGLWidget::openFileOff()
     if (!fileName.isEmpty())
     {
 
-        model = std::make_shared<Model>(this);
-        model->yTransform = 90;
-        model->readOFFFile(fileName);
+            pig1 = std::make_shared<Model>(this);
+            pig1->yTransform = 60;
+            pig1->readOFFFile(fileName);
+            pig1->invDiag = pig1->invDiag  / 2;
+
+            pig2 = std::make_shared<Model>(this);
+            pig2->yTransform = 90;
+            pig2->readOFFFile(fileName);
+            pig2->invDiag = pig2->invDiag  / 2;
+
+
+            pig3 = std::make_shared<Model>(this);
+            pig3->yTransform = 90;
+            pig3->readOFFFile(fileName);
+            pig3->invDiag = pig3->invDiag  / 2;
+
+            pigs.push_back(pig1);
+            pigs.push_back(pig2);
+            pigs.push_back(pig3);
+
+
 
     }
     update();
@@ -60,9 +80,19 @@ void OpenGLWidget::openFileOff()
 
 }
 
-void OpenGLWidget::rotateNColor(){
+void OpenGLWidget::rotateNtranslate(){
 
-    model->zTransform = time->msec();
+
+    for (unsigned int i = 0; i < 3; ++i){
+        int x = QRandomGenerator::global()->bounded(-10, 10);
+        int y = QRandomGenerator::global()->bounded(-10, 10);
+        int z = QRandomGenerator::global()->bounded(-10, 10);
+
+        pigs[i].get()->zTransform = time->msec();
+        pigs[i].get()->midPoint = QVector3D(x, y, z);
+    }
+
+
     update();
 
     time->restart();
