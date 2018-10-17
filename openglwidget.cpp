@@ -16,7 +16,7 @@ void OpenGLWidget::initializeGL()
     time =  new QTime();
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(rotateNtranslate()));
-    timer->start(250);
+    timer->start(300);
     time->start();
 
 }
@@ -30,11 +30,12 @@ void OpenGLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if(!pig1 || !pig2 || !pig3)
+    if(!pigs[0])
         return;
-    pig1->drawModel();
-    pig2->drawModel();
-    pig3->drawModel();
+    for(unsigned int i =0; i < 3; ++i) {
+        pigs[i].get()->drawModel();
+    }
+
 
 
 }
@@ -51,28 +52,13 @@ void OpenGLWidget::openFileOff()
 
     if (!fileName.isEmpty())
     {
-
-            pig1 = std::make_shared<Model>(this);
-            pig1->yTransform = 60;
-            pig1->readOFFFile(fileName);
-            pig1->invDiag = pig1->invDiag  / 2;
-
-            pig2 = std::make_shared<Model>(this);
-            pig2->yTransform = 90;
-            pig2->readOFFFile(fileName);
-            pig2->invDiag = pig2->invDiag  / 2;
-
-
-            pig3 = std::make_shared<Model>(this);
-            pig3->yTransform = 90;
-            pig3->readOFFFile(fileName);
-            pig3->invDiag = pig3->invDiag  / 2;
-
-            pigs.push_back(pig1);
-            pigs.push_back(pig2);
-            pigs.push_back(pig3);
-
-
+        for(unsigned int i =0; i < 3; ++i) {
+            std::shared_ptr<Model> pig (new Model(this));
+            pig->yTransform = 60;
+            pig->readOFFFile(fileName);
+            pig->invDiag = pig->invDiag  / 2;
+            pigs.push_back(pig);
+        }
 
     }
     update();
